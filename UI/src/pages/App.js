@@ -1,21 +1,25 @@
 import './App.css';
-import React, {useEffect} from 'react';
+import React, {useState} from 'react';
 import Button from "@material-ui/core/Button";
-
-const getCustomers = async () => {
-    const allCustomersUrl = '/customers/all';
-    let customers;
-    try {
-        customers = await fetch(allCustomersUrl, {
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'}
-        }).then(r => r.json()).then(result => console.log(result));
-    } catch {
-        console.warn('error loading customers')
-    }
-}
+import AllCustomers from "../components/AllCustomers";
 
 function App() {
+
+    const getCustomers = async () => {
+        const allCustomersUrl = '/customers/all';
+
+        try {
+            await fetch(allCustomersUrl, {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            }).then(r => r.json()).then(result => setCustomersArr(result));
+        } catch {
+            console.warn('error loading customers')
+        }
+    }
+
+
+    const [customersArr, setCustomersArr] = useState([]);
 
     return (
         <div className="App">
@@ -23,6 +27,9 @@ function App() {
                 <p>
                     All Customer List:
                 </p>
+                <div>
+                    <AllCustomers customers={customersArr}/>
+                </div>
             </header>
             <div>
 
@@ -35,6 +42,7 @@ function App() {
             </div>
         </div>
     );
+
 }
 
 export default App;
